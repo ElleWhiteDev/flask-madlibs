@@ -2,39 +2,56 @@ document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById("madlib-form");
     form.addEventListener("submit", function (event) {
         if (!validateForm()) {
-			event.preventDefault();
-		} else {
-			convertInputsToLowerCase();
-		}
+            event.preventDefault();
+        }
     });
 });
 
+
 function showSnackbar(message) {
-    const snackbar = document.getElementById("snackbar");
-    snackbar.innerText = message;
-    snackbar.classList.remove("hidden");
-    setTimeout(() => {
-        snackbar.classList.add("hidden");
-    }, 3000);
+	const snackbar = document.getElementById("snackbar");
+	snackbar.innerText = message;
+	snackbar.classList.remove("hidden");
+	snackbar.classList.add("show"); 
+	setTimeout(() => {
+		snackbar.classList.remove("show"); 
+		snackbar.classList.add("hidden");
+	}, 4000);
 }
 
 function validateForm() {
-    const inputs = document.getElementsByTagName("input");
-    let isValid = true;
+	const inputs = document.getElementsByTagName("input");
+	let isValid = true;
 
-    for (let input of inputs) {
-        if (input.value.trim().length < 3) {
-            isValid = false;
-            input.classList.add("invalid");
-        } else {
-            input.classList.remove("invalid");
-        }
-    }
+	function containsInteger(value) {
+		return /\d/.test(value);
+	}
 
-    if (!isValid) {
-        showSnackbar("Please enter at least 3 characters for all fields.");
-    }
+	for (let input of inputs) {
+		if (input.value.trim().length < 3 || containsInteger(input.value)) {
+			isValid = false;
+			input.classList.add("invalid");
+		} else {
+			input.classList.remove("invalid");
+		}
+	}
 
-    return isValid;
+	// This block should be inside the validateForm function
+	if (!isValid) {
+		showSnackbar(
+			"Please enter at least 3 characters for all fields and avoid using numbers."
+		);
+	}
+
+	return isValid;
 }
 
+
+
+
+function convertInputsToLowerCase() {
+	const inputs = document.getElementsByTagName("input");
+	for (let input of inputs) {
+		input.value = input.value.toLowerCase();
+	}
+}

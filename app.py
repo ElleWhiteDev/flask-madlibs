@@ -10,6 +10,7 @@ class Story:
         self.template = text
 
     def generate(self, answers):
+        """Given a dictionary of answers, generate the story"""
         text = self.template
         for (key, val) in answers.items():
             text = text.replace("{" + key + "}", val)
@@ -60,21 +61,25 @@ prebuilt_stories = {
 
 @app.route('/')
 def index():
+    """Show homepage"""
     return render_template('index.html')
 
 
 @app.route('/create_your_own')
 def create_your_own():
+    """Show form for user to create their own story"""
     return render_template('create_your_own.html')
 
 
 @app.route('/choose_prebuilt')
 def choose_prebuilt():
+    """Show page with dropdown to prebuilt stories"""
     return render_template('choose_prebuilt.html', prebuilt_stories=prebuilt_stories)
 
 
 @app.route('/create_story', methods=['POST'])
 def create_story():
+    """Create story from form input and show story"""
     story_template = request.form['story_template']
     placeholders = re.findall(r'\{(\w+)\}', story_template)
     return render_template('form.html', placeholders=placeholders, story_template=story_template, user_created=True)
@@ -83,6 +88,7 @@ def create_story():
 
 @app.route('/create_prebuilt_story', methods=['POST'])
 def create_prebuilt_story():
+    """Create story from prebuilt story and show story"""
     story_id = request.form['prebuilt_story']
     story = prebuilt_stories[story_id]
     return render_template('form.html', placeholders=story.prompts, story_template=story.template, user_created=False)
@@ -90,6 +96,7 @@ def create_prebuilt_story():
 
 @app.route('/show_story', methods=['POST'])
 def show_story():
+    """Show story"""
     story_template = request.form['story_template']
     placeholders = re.findall(r'\{(\w+)\}', story_template)
     answers = {placeholder: request.form[placeholder].lower()
@@ -100,11 +107,4 @@ def show_story():
     return render_template('story.html', story=generated_story, user_created=user_created)
 
 
-@app.route('/donate_story', methods=['POST'])
-def donate_story():
-    story_template = request.form['story_template']
-    title = request.form['title']
-    placeholders = re.findall(r'\{(\w+)\}', story_template)
-    user_story = Story(placeholders, story_template)
-    prebuilt_stories[title] = user_story
-    return redirect(url_for('index'))
+
