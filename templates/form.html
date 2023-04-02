@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Fill in the Madlib{% endblock %}
+
+{% block content %}
+    <h1>Fill in the Madlib</h1>
+<form action="{{ url_for('show_story') }}" method="POST">
+    {% for placeholder in placeholders %}
+        <label for="{{ placeholder }}">{{ placeholder.capitalize() }}:</label>
+        <input type="text" id="{{ placeholder }}" name="{{ placeholder }}" required><br>
+    {% endfor %}
+    <input type="hidden" name="story_template" value="{{ story_template }}">
+    <input type="hidden" name="user_created" value="{{ user_created }}">
+    <button type="submit">Generate story</button>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{{ url_for('static', filename='validateForm.js') }}"></script>
+{% endblock %}

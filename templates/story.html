@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Madlibs Adventures{% endblock%}
+
+{% block content %}
+    <h1>Your Mad Libs Story</h1>
+    <p>{{ story }}</p>
+
+    {% if user_created %}
+        <h2>Donate Story</h2>
+        <form action="{{ url_for('donate_story') }}" method="POST">
+            <input type="hidden" name="story_template" value="{{ story }}">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" required>
+            <button type="submit">Donate Story</button>
+        </form>
+    {% endif %}
+
+    <a href="{{ url_for('create_your_own') }}">Create Another Story</a>
+{% endblock %}
